@@ -30,3 +30,68 @@ The simulation operates in a loop, mimicking the behavior of a real-time system.
 7.  **Simulated Hang:** The code includes a section that intentionally simulates a software hang using an infinite `while` loop. This demonstrates how the watchdog mechanism detects and recovers from such situations.
 
 ## 📂 Project Structure
+├── README.md          <- This file
+└── watchdog_simulation.c <- The C source code for the simulation
+
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* A C compiler (like GCC)
+* A terminal or command prompt
+
+### Compilation
+
+1.  Save the code as `watchdog_simulation.c`.
+2.  Open your terminal or command prompt and navigate to the directory where you saved the file.
+3.  Compile the code using GCC:
+
+    ```bash
+    gcc watchdog_simulation.c -o watchdog_simulation
+    ```
+
+### Running the Simulation
+
+1.  Execute the compiled program:
+
+    ```bash
+    ./watchdog_simulation
+    ```
+
+2.  Observe the output, which will show the application doing work, the watchdog being kicked, and the simulated reset when the hang condition is triggered.
+
+## ⚙️ Configuration
+
+The following parameters can be adjusted in the `watchdog_simulation.c` file:
+
+```c
+// Configuration
+#define WATCHDOG_TIMEOUT 100      // Number of loop iterations before timeout
+#define KICK_INTERVAL 50        // Number of loop iterations between watchdog kicks
+WATCHDOG_TIMEOUT: This defines how many loop iterations the watchdog will wait before assuming a system failure if it's not kicked. A higher value means a longer timeout period.
+KICK_INTERVAL: This determines how often the kick_watchdog() function is called (in terms of loop iterations). The watchdog should be kicked more frequently than the timeout period to prevent resets during normal operation.
+💡 Potential Enhancements
+Here are some ideas to further develop this simulation:
+
+🕰️ Time-Based Watchdog: Implement the watchdog using actual time (e.g., milliseconds) instead of loop iterations for more realistic timing. Explore using <time.h> functions.
+📝 Configurable Parameters: Allow setting WATCHDOG_TIMEOUT and KICK_INTERVAL via command-line arguments or a configuration file.
+🚦 Different Failure Modes: Simulate various types of failures that could prevent the watchdog from being kicked (e.g., a function taking too long, resource contention).
+🧱 Modular Design: Encapsulate the watchdog logic into a separate set of functions or a structure for better organization and reusability.
+📞 Watchdog Driver Interface: Create an abstract interface that mimics how a real watchdog driver would interact with the application code.
+🔄 Hardware Reset Simulation: Instead of just printing a message, simulate a more detailed system reset process.
+<0xF0><0x9F><0x97><0x84> Logging: Add logging functionality to record watchdog events (kicks, timeouts, resets) for debugging and analysis.
+TaskManager Integration: Integrate the watchdog with a simple task scheduler to monitor the execution of different simulated tasks.
+🔗 Related Concepts
+Real-Time Operating Systems (RTOS): Watchdogs are commonly used in RTOS environments to ensure the reliability of time-critical tasks.
+Embedded Systems: Watchdog timers are essential in embedded systems where manual intervention might not be possible in case of failures.
+Fault Tolerance: Watchdog timers are a key component in building fault-tolerant systems that can automatically recover from errors.
+Connected Vehicles: In connected vehicles, ensuring the reliability and safety of software components is paramount, making watchdog timers a critical safety mechanism.
+📜 License
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+👨‍💻 Author
+[Samyak Hanwate/hansam404]
+
+Feel free to contribute to this project by submitting pull requests or suggesting improvements!
+
