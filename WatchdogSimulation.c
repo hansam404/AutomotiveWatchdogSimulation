@@ -20,6 +20,18 @@ void kick_watchdog() {
     printf("Watchdog kicked!\n");
 }
 
+void print_progress_bar(int value, int max, int width) {
+    int filled = (value * width) / max;
+    printf("[");
+    for (int i = 0; i < width; ++i) {
+        if (i < filled)
+            printf("#");
+        else
+            printf(" ");
+    }
+    printf("] %3d/%-3d\n", value, max);
+}
+
 int main() {
     char input_buffer[256];
 
@@ -63,21 +75,21 @@ int main() {
 
         // Print UI header
         printf("=== Automotive Watchdog Simulation ===\n");
-        printf("Watchdog Timeout: %d | Kick Interval: %d\n", watchdog_timeout, kick_interval);
-        printf("Loop Counter: %d\n", loop_counter);
-        printf("--------------------------------------\n");
+        printf("Watchdog Timeout: %-5d | Kick Interval: %-5d | Loop: %-6d\n", watchdog_timeout, kick_interval, loop_counter);
+        printf("----------------------------------------------------------\n");
 
-        // Show current watchdog counter
-        printf("Watchdog Counter: %d\n", watchdog_counter);
+        // Progress bar for watchdog counter
+        printf("Watchdog Counter: ");
+        print_progress_bar(watchdog_counter, watchdog_timeout, 30);
 
-        // Show system state
+        // Show system state with color
         if (is_hanging) {
-            printf("System State: HANGING\n");
+            printf("System State: \033[1;31mHANGING\033[0m\n"); // Red
         } else {
-            printf("System State: RUNNING\n");
+            printf("System State: \033[1;32mRUNNING\033[0m\n"); // Green
         }
 
-        printf("--------------------------------------\n");
+        printf("----------------------------------------------------------\n");
         printf("Application doing some work....\n");
 
         // Simulate a timer interrupt (or check within the loop)
@@ -90,7 +102,7 @@ int main() {
 
         // Check if watchdog has timed out
         if (watchdog_counter <= 0) {
-            printf("WATCHDOG RESET!\n");
+            printf("\033[1;33mWATCHDOG RESET!\033[0m\n"); // Yellow
             // Simulate a reset (in a real system, this would be a hardware reset)
             watchdog_counter = watchdog_timeout;        // Reset the counter
             is_hanging = false;            // Clear the hang flag (if it was set)
@@ -106,13 +118,13 @@ int main() {
                 // Clear the screen for hang UI
                 printf("\033[2J\033[H");
                 printf("=== Automotive Watchdog Simulation ===\n");
-                printf("System State: HANGING\n");
+                printf("System State: \033[1;31mHANGING\033[0m\n");
                 printf("Watchdog Counter: %d\n", watchdog_counter);
                 printf("Hanging...\n");
                 sleep(1); // To prevent the loop from consuming all CPU
                 watchdog_counter--;
                 if (watchdog_counter <= 0) {
-                    printf("WATCHDOG RESET!\n");
+                    printf("\033[1;33mWATCHDOG RESET!\033[0m\n");
                     watchdog_counter = watchdog_timeout;
                     is_hanging = false;
                     printf("System reset.\n");
