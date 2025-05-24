@@ -35,6 +35,7 @@ The simulation operates in a loop, mimicking the behavior of a real-time system.
 ## 📂 Project Structure
 
 ├── README.md
+
 └── watchdog_simulation.c
 
 
