@@ -58,13 +58,30 @@ int main() {
     // Main application loop
     int loop_counter = 0;
     while (1) {
-        // Simulate some application work
+        // Clear the screen (ANSI escape code)
+        printf("\033[2J\033[H");
+
+        // Print UI header
+        printf("=== Automotive Watchdog Simulation ===\n");
+        printf("Watchdog Timeout: %d | Kick Interval: %d\n", watchdog_timeout, kick_interval);
+        printf("Loop Counter: %d\n", loop_counter);
+        printf("--------------------------------------\n");
+
+        // Show current watchdog counter
+        printf("Watchdog Counter: %d\n", watchdog_counter);
+
+        // Show system state
+        if (is_hanging) {
+            printf("System State: HANGING\n");
+        } else {
+            printf("System State: RUNNING\n");
+        }
+
+        printf("--------------------------------------\n");
         printf("Application doing some work....\n");
 
         // Simulate a timer interrupt (or check within the loop)
         watchdog_counter--;
-
-        printf("Watchdog counter: %d\n", watchdog_counter);
 
         // Periodically "kick" the watchdog
         if (loop_counter % kick_interval == 0) {
@@ -78,6 +95,7 @@ int main() {
             watchdog_counter = watchdog_timeout;        // Reset the counter
             is_hanging = false;            // Clear the hang flag (if it was set)
             printf("System reset.\n");
+            usleep(1000000); // Pause to show reset message
         }
 
         // Simulate a condition that causes a "hang"
@@ -85,9 +103,21 @@ int main() {
             printf("Simulating a software hang!\n");
             is_hanging = true;
             while (is_hanging) {
-                // Infinite loop - the watchdog should eventually trigger
+                // Clear the screen for hang UI
+                printf("\033[2J\033[H");
+                printf("=== Automotive Watchdog Simulation ===\n");
+                printf("System State: HANGING\n");
+                printf("Watchdog Counter: %d\n", watchdog_counter);
                 printf("Hanging...\n");
                 sleep(1); // To prevent the loop from consuming all CPU
+                watchdog_counter--;
+                if (watchdog_counter <= 0) {
+                    printf("WATCHDOG RESET!\n");
+                    watchdog_counter = watchdog_timeout;
+                    is_hanging = false;
+                    printf("System reset.\n");
+                    sleep(1);
+                }
             }
         }
 
